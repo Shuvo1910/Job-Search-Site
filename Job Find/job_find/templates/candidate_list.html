@@ -1,0 +1,136 @@
+{% extends 'master/base.html' %}
+
+{% block title %}Candidate List | JobPort{% endblock %}
+
+{% block extra_css %}
+<style>
+    .page-title {
+        font-weight: 800;
+        background: var(--brand-gradient);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        letter-spacing: -1px;
+    }
+    .table-container {
+        background: white;
+        padding: 30px;
+        border-radius: 20px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+        border: 1px solid rgba(0,0,0,0.05);
+    }
+    .table thead {
+        background: #f8fafc;
+    }
+    .table thead th {
+        border: none;
+        color: #64748b;
+        font-weight: 700;
+        text-transform: uppercase;
+        font-size: 12px;
+        letter-spacing: 1px;
+        padding: 15px;
+    }
+    .candidate-row {
+        transition: 0.2s;
+    }
+    .candidate-row:hover {
+        background-color: #f1f5f9 !important;
+    }
+    .avatar-circle {
+        width: 40px;
+        height: 40px;
+        background: var(--brand-gradient);
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        font-weight: 700;
+        margin-right: 12px;
+    }
+    .btn-resume {
+        background: #eef2ff;
+        color: #6366f1;
+        border: none;
+        font-weight: 600;
+        border-radius: 8px;
+        padding: 6px 15px;
+        transition: 0.3s;
+    }
+    .btn-resume:hover {
+        background: #6366f1;
+        color: white;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <!-- Header Section -->
+    <div class="row mb-4 align-items-center" data-aos="fade-down">
+        <div class="col-md-8">
+            <h1 class="page-title">Candidates for {{ job.job_title }}</h1>
+            <p class="text-muted mb-0">Total Applications: <span class="badge bg-primary rounded-pill">{{ candidate_data.count }}</span></p>
+        </div>
+        <div class="col-md-4 text-md-end">
+            <a href="{% url 'job_list' %}" class="btn btn-outline-dark" style="border-radius: 12px;">
+                <i class="bi bi-arrow-left me-2"></i>Back to Jobs
+            </a>
+        </div>
+    </div>
+
+    <!-- Candidates Table -->
+    <div class="table-container" data-aos="fade-up">
+        <div class="table-responsive">
+            <table class="table align-middle">
+                <thead>
+                    <tr>
+                        <th># SL</th>
+                        <th>Candidate Name</th>
+                        <th>Application Date</th>
+                        <th class="text-center">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for data in candidate_data %}
+                    <tr class="candidate-row">
+                        <td class="fw-bold text-muted" style="width: 80px;">{{ forloop.counter }}</td>
+                        <td>
+                            <div class="d-flex align-items-center">
+                                <div class="avatar-circle">
+                                    {{ data.applied_by.user_info.username|first|upper }}
+                                </div>
+                                <div>
+                                    <div class="fw-bold text-dark">{{ data.applied_by.user_info.display_name|default:data.applied_by.user_info.username }}</div>
+                                    <div class="small text-muted">{{ data.applied_by.email }}</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="text-dark">{{ data.applied_at|date:"M d, Y" }}</div>
+                            <div class="small text-muted">{{ data.applied_at|timesince }} ago</div>
+                        </td>
+                        <td class="text-center">
+                            {% if data.resume %}
+                                <a href="{{ data.resume.url }}" class="btn btn-resume btn-sm" target="_blank">
+                                    <i class="bi bi-file-earmark-pdf me-1"></i> View Resume
+                                </a>
+                            {% else %}
+                                <span class="badge bg-light text-muted fw-normal">No Resume</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="4" class="text-center py-5 text-muted">
+                            <i class="bi bi-people style="font-size: 3rem; opacity: 0.3;"></i>
+                            <p class="mt-3">No one has applied for this job yet.</p>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

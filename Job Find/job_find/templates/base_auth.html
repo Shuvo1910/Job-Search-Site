@@ -1,0 +1,298 @@
+{% extends 'master/base.html' %}
+{% load static %} 
+
+{% block content %}
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+
+<section class="auth-section">
+  <div class="container-fluid p-0">
+    <div class="row g-0 min-vh-100">
+      
+      <!-- Left Side: Branding + Image -->
+      <div class="col-lg-6 d-none d-lg-block auth-visual">
+        <!-- Background Image Layer -->
+        <img class="auth-bg-image" 
+             src="{% if 'Login' in form_title %}{% static 'login.jpg' %}{% else %}{% static 'register.jpg' %}{% endif %}" 
+             alt="Job Portal">
+        
+        <!-- Gradient Overlay -->
+        <div class="auth-visual-overlay"></div>
+        
+        <!-- Content -->
+        <div class="auth-visual-content">
+          <div class="brand-logo">
+            <i class="bi bi-briefcase-fill"></i>
+            <span class="fw-bold fs-4">JobPort</span>
+          </div>
+          
+          <div class="visual-text">
+            <h1 class="display-5 fw-bold mb-4">
+              {% if 'Login' in form_title %}
+                Welcome Back to Your Career Hub
+              {% else %}
+                Start Your Journey to Dream Jobs
+              {% endif %}
+            </h1>
+            <p class="fs-5 mb-5">
+              {% if 'Login' in form_title %}
+                Sign in to access 120k+ jobs from top companies worldwide.
+              {% else %}
+                Join 2M+ professionals who found success through JobPort.
+              {% endif %}
+            </p>
+            
+            <div class="d-flex flex-wrap gap-4">
+              <div class="feature-badge"><i class="bi bi-check-circle-fill"></i> Free Forever</div>
+              <div class="feature-badge"><i class="bi bi-check-circle-fill"></i> No Spam</div>
+              <div class="feature-badge"><i class="bi bi-check-circle-fill"></i> AI Matched</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Side: Form -->
+      <div class="col-lg-6 d-flex align-items-center justify-content-center auth-form-wrapper">
+        <div class="auth-card">
+          <div class="text-center mb-5">
+            <div class="d-lg-none mb-4">
+              <i class="bi bi-briefcase-fill text-primary fs-1"></i>
+              <span class="fw-bold fs-4 ms-2">JobPort</span>
+            </div>
+            <h2 class="fw-bold mb-2">{{ form_title }}</h2>
+            <p class="text-muted">
+              {% if 'Login' in form_title %}
+                Enter your credentials to access your account
+              {% else %}
+                Create your account and unlock opportunities
+              {% endif %}
+            </p>
+          </div>
+
+          <form action="" method="POST" enctype="multipart/form-data" class="needs-validation" novalidate>
+            {% csrf_token %}
+            
+            <div class="modern-form-wrapper">
+              {% for field in form_data %}
+                <div class="form-group-modern mb-3">
+                  <label for="{{ field.id_for_label }}" class="form-label-modern">
+                    {{ field.label }}
+                    {% if field.field.required %}<span class="text-danger">*</span>{% endif %}
+                  </label>
+                  {{ field }}
+                  {% if field.help_text %}
+                    <small class="form-text text-muted">{{ field.help_text }}</small>
+                  {% endif %}
+                  {% if field.errors %}
+                    <div class="invalid-feedback d-block">
+                      {{ field.errors|striptags }}
+                    </div>
+                  {% endif %}
+                </div>
+              {% endfor %}
+            </div>
+
+            {% if 'Login' in form_title %}
+            <div class="d-flex justify-content-between align-items-center mb-4">
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="rememberMe">
+                <label class="form-check-label text-muted small" for="rememberMe">Remember me</label>
+              </div>
+              <a href="#" class="text-primary text-decoration-none small fw-semibold">Forgot password?</a>
+            </div>
+            {% endif %}
+
+            <div class="d-grid mb-4">
+              <button class="btn btn-gradient btn-lg rounded-3 py-3" type="submit">
+                {{ btn_name }} <i class="bi bi-arrow-right ms-2"></i>
+              </button>
+            </div>
+          </form>
+
+          <div class="text-center mt-4">
+            {% if "Login" in form_title %}
+              <p class="text-muted">Don't have an account? 
+                <a href="{% url 'register_page' %}" class="fw-bold text-primary text-decoration-none">Sign up free</a>
+              </p>
+            {% else %}
+              <p class="text-muted">Already have an account? 
+                <a href="{% url 'login_page' %}" class="fw-bold text-primary text-decoration-none">Sign in</a>
+              </p>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<style>
+  :root {
+    --brand-gradient: linear-gradient(135deg, #6366f1 0%, #3b82f6 50%, #0ea5e9 100%);
+  }
+  
+  body {
+    font-family: 'Outfit', sans-serif;
+  }
+
+  .auth-section {
+    background: #f8fafc;
+  }
+
+  /* Left Visual Side - Fixed Alignment + Image */
+  .auth-visual {
+    position: relative;
+    background: #0f172a;
+    overflow: hidden;
+  }
+  .auth-bg-image {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    opacity: 0.4;
+  }
+  .auth-visual-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(15, 23, 42, 0.9) 0%, rgba(99, 102, 241, 0.7) 100%);
+    z-index: 1;
+  }
+  .auth-visual-content {
+    position: relative;
+    z-index: 2;
+    padding: 3rem 4rem;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    color: white;
+  }
+  .brand-logo {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+  .brand-logo i {
+    font-size: 2rem;
+    color: white;
+  }
+  .visual-text {
+    max-width: 500px;
+  }
+  .visual-text h1 {
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+  }
+  .visual-text p {
+    opacity: 0.85;
+    line-height: 1.6;
+  }
+  .feature-badge {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.95rem;
+    opacity: 0.9;
+  }
+  .feature-badge i {
+    color: #4ade80;
+  }
+
+  /* Right Form Side */
+  .auth-form-wrapper {
+    padding: 2rem;
+    background: white;
+  }
+  .auth-card {
+    width: 100%;
+    max-width: 440px;
+  }
+
+  /* Modern Form Styling */
+  .modern-form-wrapper input[type="text"],
+  .modern-form-wrapper input[type="email"],
+  .modern-form-wrapper input[type="password"],
+  .modern-form-wrapper input[type="file"],
+  .modern-form-wrapper select,
+  .modern-form-wrapper textarea {
+    display: block;
+    width: 100%;
+    padding: 0.875rem 1rem;
+    font-size: 0.95rem;
+    color: #1e293b;
+    background-color: #f8fafc;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 12px;
+    transition: all 0.2s ease;
+  }
+  .modern-form-wrapper input:focus,
+  .modern-form-wrapper select:focus,
+  .modern-form-wrapper textarea:focus {
+    background-color: #fff;
+    border-color: #6366f1;
+    outline: 0;
+    box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
+  }
+  .modern-form-wrapper input[type="file"] {
+    padding: 0.65rem 1rem;
+  }
+  .form-label-modern {
+    font-weight: 600;
+    font-size: 0.875rem;
+    color: #334155;
+    margin-bottom: 0.5rem;
+  }
+  .form-check-input:checked {
+    background-color: #6366f1;
+    border-color: #6366f1;
+  }
+
+  /* Gradient Button */
+  .btn-gradient {
+    background: var(--brand-gradient);
+    border: none;
+    color: white;
+    font-weight: 600;
+    transition: all .3s ease;
+  }
+  .btn-gradient:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 24px rgba(99, 102, 241, 0.35);
+    color: white;
+  }
+
+  /* Divider */
+  .divider-text {
+    position: relative;
+    text-align: center;
+    margin: 1.5rem 0;
+  }
+  .divider-text span {
+    background: #fff;
+    padding: 0 1rem;
+    color: #94a3b8;
+    font-size: 0.875rem;
+    position: relative;
+    z-index: 1;
+  }
+  .divider-text::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: #e2e8f0;
+  }
+
+  @media (max-width: 991px) {
+    .auth-form-wrapper {
+      min-height: 100vh;
+    }
+  }
+</style>
+{% endblock %}

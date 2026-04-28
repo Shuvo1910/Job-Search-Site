@@ -1,0 +1,125 @@
+{% extends 'master/base.html' %} 
+
+{% block title %}My Applied Jobs | JobPort{% endblock %}
+
+{% block extra_css %}
+<style>
+    .page-title {
+        font-weight: 800;
+        background: var(--brand-gradient);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        letter-spacing: -1px;
+    }
+    .job-card {
+        border-radius: 20px;
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        background: #ffffff;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+        transition: all 0.3s ease;
+        overflow: hidden;
+    }
+    .job-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.08);
+    }
+    .company-logo {
+        width: 55px;
+        height: 55px;
+        object-fit: cover;
+        border-radius: 12px;
+    }
+    .status-badge {
+        background: #dcfce7;
+        color: #15803d;
+        padding: 4px 12px;
+        border-radius: 100px;
+        font-size: 12px;
+        font-weight: 700;
+        display: inline-flex;
+        align-items: center;
+    }
+    .status-badge::before {
+        content: '';
+        width: 6px;
+        height: 6px;
+        background: #22c55e;
+        border-radius: 50%;
+        margin-right: 6px;
+    }
+    .apply-date {
+        font-size: 0.85rem;
+        color: #64748b;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <!-- Header Section -->
+    <div class="row mb-5" data-aos="fade-down">
+        <div class="col-12">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{% url 'home_page' %}">Home</a></li>
+                    <li class="breadcrumb-item active">Applied Jobs</li>
+                </ol>
+            </nav>
+            <h1 class="page-title">My Applied Jobs</h1>
+            <p class="text-muted">Tracking your career applications</p>
+        </div>
+    </div>
+
+    <div class="row">
+        {% for job in job_data %}
+        <div class="col-lg-6 mb-4" data-aos="fade-up" data-aos-delay="{{ forloop.counter0 }}00">
+            <div class="card job-card p-4">
+                <div class="d-flex justify-content-between align-items-start mb-3">
+                    <div class="d-flex align-items-center">
+                        {% if job.applied_job.posted_by.logo %}
+                            <img src="{{ job.applied_job.posted_by.logo.url }}" class="company-logo me-3 shadow-sm" alt="Logo">
+                        {% else %}
+                            <div class="company-logo me-3 bg-light d-flex align-items-center justify-content-center">
+                                <i class="bi bi-building text-muted"></i>
+                            </div>
+                        {% endif %}
+                        <div>
+                            <h5 class="fw-bold mb-0">{{ job.applied_job.job_title }}</h5>
+                            <p class="text-muted mb-0 small">{{ job.applied_job.posted_by.company_name }}</p>
+                        </div>
+                    </div>
+                    <span class="status-badge">Applied</span>
+                </div>
+
+                <div class="mb-4">
+                    <p class="text-muted small" style="line-height: 1.5;">
+                        {{ job.applied_job.job_description|truncatewords:20 }}
+                    </p>
+                </div>
+
+                <div class="d-flex justify-content-between align-items-center pt-3 border-top mt-auto">
+                    <div class="apply-date">
+                        <i class="bi bi-calendar-check me-1"></i>
+                        Applied on: <strong>{{ job.applied_at|date:"M d, Y" }}</strong>
+                    </div>
+                    <a href="#" class="btn btn-sm btn-outline-dark px-3" style="border-radius: 8px; font-weight: 600;">
+                        View Details
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12 text-center py-5" data-aos="zoom-in">
+            <div class="bg-white d-inline-block p-5 rounded-circle shadow-sm mb-4">
+                <i class="bi bi-briefcase text-muted" style="font-size: 3.5rem;"></i>
+            </div>
+            <h4>You haven't applied to any jobs yet.</h4>
+            <p class="text-muted">Start your journey by browsing available opportunities.</p>
+            <a href="{% url 'job_list' %}" class="btn btn-primary px-4 py-2 mt-2" style="border-radius: 12px; background: var(--brand-gradient); border:none;">
+                Explore Jobs
+            </a>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

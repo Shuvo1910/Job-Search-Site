@@ -1,0 +1,126 @@
+{% extends 'master/base.html' %}
+{% load static %}
+
+{% block title %}
+  JobPort | Find Your Dream Career
+{% endblock %}
+
+{% block content %}
+  <style>
+    .hero-section {
+      padding: 80px 0;
+      background: linear-gradient(135deg, #f0f7ff 0%, #ffffff 100%);
+    }
+    .search-box {
+      background: #fff;
+      padding: 20px;
+      border-radius: 15px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+      margin-top: -40px;
+      z-index: 10;
+      position: relative;
+    }
+    .category-card {
+      border: 1px solid #eee;
+      border-radius: 16px;
+      transition: all 0.3s ease;
+      background: white;
+    }
+    .category-card:hover {
+      border-color: #0d6efd;
+      box-shadow: 0 10px 20px rgba(13, 110, 253, 0.1);
+      transform: translateY(-5px);
+    }
+    .icon-box {
+      width: 50px;
+      height: 50px;
+      background: #e7f0ff;
+      color: #0d6efd;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 12px;
+      font-size: 1.5rem;
+      margin-bottom: 15px;
+    }
+  </style>
+
+  <!-- Modern Hero Section -->
+  <header class="hero-section">
+    <div class="container">
+      <div class="row align-items-center">
+        <!-- Text Content -->
+        <div class="col-lg-6">
+          <h1 class="display-3 fw-bold text-dark mb-3">Find Your <span class="text-primary">Dream Job</span> Easier & Faster</h1>
+          <p class="lead text-muted mb-5">Browse through thousands of job opportunities from top companies and startups around the world.</p>
+          <div class="d-flex gap-3">
+            <a href="{% url 'job_list' %}" class="btn btn-primary btn-lg px-5 py-3 rounded-pill shadow">Browse Jobs</a>
+
+            {% if not request.user.is_authenticated %}
+              <a href="{% url 'register_page' %}" class="btn btn-outline-dark btn-lg px-5 py-3 rounded-pill">Join Now</a>
+            {% endif %}
+          </div>
+        </div>
+
+        <!-- Image Content -->
+        <div class="col-lg-6 d-none d-lg-block">
+          <div class="ps-lg-5">
+            <img src="{% static 'home.jpg' %}" alt="Home Banner" class="img-fluid rounded-4 shadow-sm" style="object-fit: cover; max-height: 500px; width: 100%;" />
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Job Categories Section -->
+  <section class="py-5 mt-5">
+    <div class="container">
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="fw-bold">Popular Categories</h2>
+        <a href="{% url 'job_list' %}" class="text-primary text-decoration-none fw-semibold">View All →</a>
+      </div>
+      <div class="row g-4">
+        <!-- Category 1 -->
+        <div class="col-6 col-md-3">
+          <div class="card category-card p-4">
+            <div class="icon-box">
+              <i class="bi bi-code-slash"></i>
+            </div>
+            <h6 class="fw-bold">Development</h6>
+            <p class="text-muted small mb-0">1.2k+ Vacancy</p>
+          </div>
+        </div>
+        <!-- Category 2 -->
+        <div class="col-6 col-md-3">
+          <div class="card category-card p-4">
+            <div class="icon-box">
+              <i class="bi bi-megaphone"></i>
+            </div>
+            <h6 class="fw-bold">Marketing</h6>
+            <p class="text-muted small mb-0">850 Vacancy</p>
+          </div>
+        </div>
+        <!-- Category 3 -->
+        <div class="col-6 col-md-3">
+          <div class="card category-card p-4">
+            <div class="icon-box">
+              <i class="bi bi-palette"></i>
+            </div>
+            <h6 class="fw-bold">Design</h6>
+            <p class="text-muted small mb-0">430 Vacancy</p>
+          </div>
+        </div>
+        <!-- Category 4 -->
+        <div class="col-6 col-md-3">
+          <div class="card category-card p-4">
+            <div class="icon-box">
+              <i class="bi bi-bar-chart"></i>
+            </div>
+            <h6 class="fw-bold">Finance</h6>
+            <p class="text-muted small mb-0">210 Vacancy</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+{% endblock %}

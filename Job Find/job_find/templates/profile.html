@@ -1,0 +1,265 @@
+{% extends 'master/base.html' %}
+{% load static %}
+{% block title %}{{ user.username }} | Profile - JobPort{% endblock %}
+
+{% block content %}
+<section class="py-5">
+  <div class="container">
+    <div class="row g-4">
+      
+      <!-- Left: Profile Card -->
+      <div class="col-lg-4">
+        <div class="profile-card" data-aos="fade-right">
+          <div class="profile-cover"></div>
+          
+          <div class="profile-avatar-wrapper">
+            {% if request.user.user_type == 'client' and request.user.client_profile.logo %}
+              <img src="{{ request.user.client_profile.logo.url }}" class="profile-avatar" alt="{{ user.username }}">
+            {% elif request.user.user_type != 'client' and request.user.user_profile.image %}
+              <img src="{{ request.user.user_profile.image.url }}" class="profile-avatar" alt="{{ user.username }}">
+            {% else %}
+              <div class="profile-avatar profile-avatar-fallback">
+                {{ user.username|slice:":1"|upper }}
+              </div>
+            {% endif %}
+          </div>
+
+          <div class="p-4 text-center">
+            <h3 class="fw-bold mb-1">{{ user.get_full_name|default:user.username }}</h3>
+            <p class="text-muted mb-3">
+              {% if request.user.user_type == 'client' %}
+                <i class="bi bi-building"></i> Client
+              {% else %}
+                <i class="bi bi-person-badge"></i> Employeer
+              {% endif %}
+            </p>
+            
+            <div class="d-flex justify-content-center gap-2 mb-4">
+              <span class="badge badge-tag rounded-pill px-3 py-2">
+                <i class="bi bi-patch-check-fill text-success"></i> Verified
+              </span>
+              <span class="badge badge-tag rounded-pill px-3 py-2">
+                <i class="bi bi-calendar3"></i> Joined {{ user.date_joined|date:"M Y" }}
+              </span>
+            </div>
+
+            <a href="{% url 'profile_update' %}" class="btn btn-gradient w-100 rounded-3 py-2">
+              <i class="bi bi-pencil-square me-2"></i>Edit Profile
+            </a>
+          </div>
+        </div>
+
+        <!-- Quick Stats -->
+        <div class="stats-card mt-4" data-aos="fade-right" data-aos-delay="100">
+          <h6 class="fw-bold mb-3">Quick Stats</h6>
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <span class="text-muted"><i class="bi bi-briefcase text-primary"></i> 
+              {% if request.user.user_type == 'client' %}Jobs Posted{% else %}Applied Jobs{% endif %}
+            </span>
+            <strong class="fs-5">12</strong>
+          </div>
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <span class="text-muted"><i class="bi bi-eye text-primary"></i> Profile Views</span>
+            <strong class="fs-5">1.2k</strong>
+          </div>
+          <div class="d-flex justify-content-between align-items-center">
+            <span class="text-muted"><i class="bi bi-star text-primary"></i> Rating</span>
+            <strong class="fs-5">4.8</strong>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right: Details -->
+      <div class="col-lg-8">
+        <div class="info-card" data-aos="fade-left">
+          <div class="d-flex justify-content-between align-items-center mb-4">
+            <h4 class="fw-bold mb-0">Profile Information</h4>
+            <a href="{% url 'profile_update' %}" class="btn btn-outline-primary btn-sm rounded-pill">
+              <i class="bi bi-pencil"></i> Edit
+            </a>
+          </div>
+
+          <div class="row g-4">
+            <div class="col-md-6">
+            <div class="col-md-6">
+              <div class="info-item">
+                <label class="info-label">Username</label>
+                <p class="info-value">{{ user.username }}</p>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="info-item">
+                <label class="info-label">Email Address</label>
+                <p class="info-value">{{ user.email }}</p>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="info-item">
+                <label class="info-label">Account Type</label>
+                <p class="info-value text-capitalize">{{ request.user.user_type }}</p>
+              </div>
+            </div>
+            
+            {% if request.user.user_type == 'client' %}
+            <div class="col-12">
+              <div class="info-item">
+                <label class="info-label">Company Name</label>
+                <p class="info-value">{{ request.user.client_profile.company_name|default:"Not set" }}</p>
+              </div>
+            </div>
+            {% else %}
+            <div class="col-md-6">
+              <div class="info-item">
+                <label class="info-label">Phone Number</label>
+                <p class="info-value">{{ request.user.user_profile.phone|default:"Not set" }}</p>
+              </div>
+            </div>
+            <div class="col-md-6">
+            </div>
+            <div class="col-12">
+              <div class="info-item">
+                <label class="info-label">Bio</label>
+                <p class="info-value">{{ request.user.user_profile.bio|default:"No bio added yet." }}</p>
+              </div>
+            </div>
+            {% endif %}
+          </div>
+        </div>
+
+        <!-- Activity / Recent -->
+        <div class="info-card mt-4" data-aos="fade-left" data-aos-delay="100">
+          <h4 class="fw-bold mb-4">Recent Activity</h4>
+          <div class="activity-item">
+            <div class="activity-icon bg-primary-subtle text-primary">
+              <i class="bi bi-briefcase"></i>
+            </div>
+            <div>
+              <p class="mb-1 fw-semibold">Applied to Senior Developer at Google</p>
+              <small class="text-muted">2 days ago</small>
+            </div>
+          </div>
+          <div class="activity-item">
+            <div class="activity-icon bg-success-subtle text-success">
+              <i class="bi bi-eye"></i>
+            </div>
+            <div>
+              <p class="mb-1 fw-semibold">Your profile was viewed by Microsoft</p>
+              <small class="text-muted">5 days ago</small>
+            </div>
+          </div>
+          <div class="activity-item">
+            <div class="activity-icon bg-warning-subtle text-warning">
+              <i class="bi bi-star"></i>
+            </div>
+            <div>
+              <p class="mb-1 fw-semibold">Saved UI/UX Designer job at Meta</p>
+              <small class="text-muted">1 week ago</small>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<style>
+  .profile-card {
+    background: white;
+    border-radius: 24px;
+    box-shadow: 0 10px 40px rgba(15, 23, 42, 0.08);
+    overflow: hidden;
+    position: relative;
+  }
+  .profile-cover {
+    height: 120px;
+    background: var(--brand-gradient);
+    position: relative;
+  }
+  .profile-cover::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  }
+  .profile-avatar-wrapper {
+    margin-top: -60px;
+    text-align: center;
+    position: relative;
+  }
+  .profile-avatar {
+    width: 120px;
+    height: 120px;
+    border-radius: 24px;
+    border: 6px solid white;
+    object-fit: cover;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+  }
+  .profile-avatar-fallback {
+    background: var(--brand-gradient);
+    color: white;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 3rem;
+    font-weight: 700;
+  }
+  .badge-tag {
+    background: #f1f5f9;
+    color: #475569;
+    font-weight: 500;
+  }
+  .btn-gradient {
+    background: var(--brand-gradient);
+    border: none;
+    color: white;
+    font-weight: 600;
+    transition: all .3s ease;
+  }
+  .btn-gradient:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 24px rgba(99, 102, 241, 0.35);
+    color: white;
+  }
+  .stats-card, .info-card {
+    background: white;
+    border-radius: 20px;
+    padding: 1.75rem;
+    box-shadow: 0 10px 40px rgba(15, 23, 42, 0.08);
+  }
+  .info-item {
+    margin-bottom: 0.5rem;
+  }
+  .info-label {
+    font-size: 0.875rem;
+    color: #64748b;
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+    display: block;
+  }
+  .info-value {
+    font-size: 1rem;
+    color: #1e293b;
+    font-weight: 500;
+    margin-bottom: 0;
+  }
+  .activity-item {
+    display: flex;
+    gap: 1rem;
+    padding: 1rem 0;
+    border-bottom: 1px solid #f1f5f9;
+  }
+  .activity-item:last-child {
+    border-bottom: none;
+  }
+  .activity-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+</style>
+{% endblock %}
